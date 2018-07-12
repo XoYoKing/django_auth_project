@@ -100,10 +100,19 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTHENTICATION_BACKENDS=(
+    'django.contrib.auth.backends.ModelBackend',
+    'users.backends.EmailBackend',
+    )
 #指定自定义的用户模型
 AUTH_USER_MODEL = 'users.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Internationalization
-# https://docs.djangoproject.com/en/1.11/topics/i18n/
+# https://docs.djangoproject.com/en/1.11/topics/i18n/_
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
 
 LANGUAGE_CODE = 'zh-hans'
 

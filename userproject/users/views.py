@@ -3,6 +3,10 @@ from .forms import RegisterForm
 # Create your views here.
 def register(request):
 	#只有当请求是post时,才表示用户提交了注册信息
+	# # 从 get 或者 post 请求中获取 next 参数值
+    # get 请求中，next 通过 url 传递，即 /?next=value
+    # post 请求中，next 通过表单传递，即 <input type="hidden" name="next" value="{{ next }}"/>
+	redirect_to = request.POST.get('next',request.GET.get('next',''))
 	if request.method == 'POST':
 		#request.POST是一个类字段的数据结构,记录了用户的注册信息
 		#这里提交的是一个用户名,密码,邮箱
@@ -13,8 +17,11 @@ def register(request):
 		if form.is_valid():
 			#如果提交数据合法,调用表单的save方法,将用户数据保存到数据库
 			form.save()
+			if redirect_to:
+				return redirect(redirect_to)
+			else:
 			#注册成功,条状会首页
-			return redirect('/')
+				return redirect('/')
 	else:
 		#请求不是post,表明用户正在访问注册页面,展示一个空的注册表单给用户
 		form = RegisterForm()
@@ -22,5 +29,7 @@ def register(request):
 	#渲染模板
 	#如果用户正在访问注册页面,则渲染的是一个空的注册表单
 	#如果用户通过表单提交注册信息,但是数据雁阵不合法,则渲染的是一个有错误信息表单
-	return render(request,'users/register.html',context={'form':form})
+	return render(request,'users/register.html',context={'form':form,'next':redirect_to})
 
+def index(request):
+	return render(request,'index.html')
